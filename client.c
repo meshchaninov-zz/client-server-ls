@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
     }
 
     int port = atoi(argv[4]);
-    
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
