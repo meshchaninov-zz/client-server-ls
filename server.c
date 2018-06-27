@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, handler);
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0) {
-        perror("socket");
+        perror("Failed to create socket");
         exit(EXIT_FAILURE);
     }
     puts("Socket created");
@@ -41,13 +41,13 @@ int main(int argc, char* argv[]) {
     addr.sin_addr.s_addr = INADDR_ANY;
 
     if(bind(sock, (const struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        perror("bind");
+        perror("Bind socket failed");
         exit(EXIT_FAILURE);
     }
     puts("Bind done");
     
     if(listen(sock, 5) < 0) {
-        perror("listen");
+        perror("Failed to listen");
         exit(EXIT_FAILURE);
     }
     puts("Waiting for incoming connections...");
@@ -57,39 +57,39 @@ int main(int argc, char* argv[]) {
     int fd[2];
     pipe(fd);
     for(;;) {
-         struct sockaddr_in addr_a;
-         
-         sock_size = sizeof(addr_a);
-         if((new_socket = accept(sock, (struct sockaddr*)&addr_a, (socklen_t*)&sock_size)) < 0) {
-             perror("accept");
-             exit(EXIT_FAILURE);
-         }
-         puts("Connections accepted");
+        struct sockaddr_in addr_a;
+        
+        sock_size = sizeof(addr_a);
+        if((new_socket = accept(sock, (struct sockaddr*)&addr_a, (socklen_t*)&sock_size)) < 0) {
+            perror("Failed to accept");
+            exit(EXIT_FAILURE);
+        }
+        puts("Connections accepted");
 
-         struct form f;
-         if(recv(new_socket, (void *)&f, sizeof(f), 0) < 0) {
-             perror("recv");
-             close(new_socket);
-             exit(EXIT_FAILURE);
-         }
-         
-         puts(f.path);
-         puts(f.e);
-         if(fork() == 0) {
-            puts("doing find..");
-            char enter = '\n';
-             write(fd[1], &enter, sizeof(enter));
-             close(fd[0]);
-             close(1);
-             close(2);
-             fcntl(fd[1], F_DUPFD, 1);
-             fcntl(fd[1], F_DUPFD, 2);
-             char str[PATH_SIZE+EX_SIZE+2];
-             strcpy(str, "*.");
-             strcat(str,f.e);
-             execl("/usr/bin/find", "find", f.path, "-name", str,NULL);
-             perror("ls");
-             exit(EXIT_FAILURE);
+        struct form f;
+        if(recv(new_socket, (void *)&f, sizeof(f), 0) < 0) {
+            perror("Failed to recv");
+            close(new_socket);
+            exit(EXIT_FAILURE);
+        }
+        
+        puts(f.path);
+        puts(f.e);
+        if(fork() == 0) {
+           puts("doing find..");
+           char enter = '\n';
+            write(fd[1], &enter, sizeof(enter));
+            close(fd[0]);
+            close(1);
+            close(2);
+            fcntl(fd[1], F_DUPFD, 1);
+            fcntl(fd[1], F_DUPFD, 2);
+            char str[PATH_SIZE+EX_SIZE+2];
+            strcpy(str, "*.");
+            strcat(str,f.e);
+            execl("/usr/bin/find", "find", f.path, "-name", str,NULL);
+            perror("ls");
+            exit(EXIT_FAILURE);
         } 
         wait(NULL);
         
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
         
         puts("Send data"); 
         if(send(new_socket, (const void*)buff, sizeof(buff), 0) < 0) {
-             perror("send");
+             perror("Failed to send");
              close(new_socket);
              exit(EXIT_FAILURE);
         }

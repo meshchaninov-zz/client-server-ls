@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
     
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0) {
-        perror("socket");
+        perror("Failed to create socket");
         close(sock);
         exit(EXIT_FAILURE);
     }
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     addr.sin_addr.s_addr = inet_addr(argv[3]);
 
     if(connect(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-        perror("connect");
+        perror("Connection failed");
         close(sock);
         exit(EXIT_FAILURE);
     }
@@ -47,17 +47,17 @@ int main(int argc, char* argv[]) {
     puts(f.path);
     puts(f.e);
     if(send(sock, (const void*)&f, sizeof(f),0) < 0) {
-        perror("send");
+        perror("Sending failed");
         close(sock);
         exit(EXIT_FAILURE);
     }
 
     if(recv(sock, (void*)buf, sizeof(buf),0) < 0) {
-        perror("recv");
+        perror("Recv failed");
         close(sock);
         exit(EXIT_FAILURE);
     }
-    
+
     puts(buf);
     
     close(sock);
