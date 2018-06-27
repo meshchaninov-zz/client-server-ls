@@ -1,28 +1,26 @@
 # client-server-ls
+Это простое клиент-серверное приложение.
+Клиент делает запрос серверу о передаче файлов с определенным расширением из указанной директории. Сервер сканирует указанную директорию и отправляет клиенту список файлов, удовлетворяющих запросу.
+Использует протокол TCP, через системные вызовы Unix систем.
 
-This is simple client-server application.
-On request gives the contents of the server folder with specified extension.
-
-## How compile
-This application only for Unix base sustem
+## Как получить исполяемый файл
+При помощи make-файла
 ```
 make
 ```
 
-## How to use
-* Server start:
+## Как использовать
+* Запускаем сервер
 ```
-./server <port>
+./server <порт>
+```
+Для остановки сервера нажмите _ctrl-c_
+* Запускаем клиент:
+```
+./client <путь к папке> <расширение> <ip> <порт>
 ```
 
-* Client start:
-```
-./client <path> <file extension> <ip> <port>
-```
-
-## Examples
+## Пример
 ![](Screenshots/Screen1.png)
-
 ![](Screenshots/Screen2.png)
-
 ![](Screenshots/Screen3.png)
