@@ -44,8 +44,9 @@ int main(int argc, char* argv[]) {
    
     char buf[BUF_SIZE];
     puts("Send..");
-    puts(f.path);
-    puts(f.e);
+    fprintf(stdout, "\nPath: %s\n", f.path);
+    fprintf(stdout, "Extencion: %s\n\n", f.e);
+
     if(send(sock, (const void*)&f, sizeof(f),0) < 0) {
         perror("Sending failed");
         close(sock);
@@ -58,6 +59,7 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    puts("Result: ");
     puts(buf);
     
     close(sock);

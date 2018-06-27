@@ -73,8 +73,9 @@ int main(int argc, char* argv[]) {
             exit(EXIT_FAILURE);
         }
         
-        puts(f.path);
-        puts(f.e);
+        fprintf(stdout, "Path: %s\n", f.path);
+        fprintf(stdout, "Extencion: %s\n", f.e);
+        
         if(fork() == 0) {
            puts("doing find..");
            char enter = '\n';
