@@ -13,7 +13,7 @@
 int main(int argc, char* argv[]) {
     if(argc != 5) {
         fprintf(stderr, "Wrong number of arguments\n");
-        fprintf(stderr, "Write:\n %s <path> <expancion> <ip> <port>", argv[0]);
+        fprintf(stderr, "Write:\n %s <path> <file extencion> <ip> <port>", argv[0]);
         exit(EXIT_FAILURE);
     }
     
