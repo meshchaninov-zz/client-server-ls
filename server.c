@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include "form.h"
 
-#define PORT 2011
 #define BUF_SIZE 100
 
 int sock, new_socket;
@@ -20,7 +19,13 @@ void handler() {
     exit(EXIT_SUCCESS);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    if(argc != 2) {
+        fprintf(stderr, "Wrong number of arguments\n");
+        fprintf(stderr, "Write:\n %s <port>", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
     signal(SIGINT, handler);
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0) {
@@ -29,9 +34,10 @@ int main() {
     }
     puts("Socket created");
     
+    int port = atoi(argv[1]);
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT);
+    addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
 
     if(bind(sock, (const struct sockaddr*)&addr, sizeof(addr)) < 0) {

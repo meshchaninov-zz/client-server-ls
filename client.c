@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -7,13 +8,12 @@
 #include <arpa/inet.h>
 #include "form.h"
 
-#define PORT 2011
 #define BUF_SIZE 500
 
 int main(int argc, char* argv[]) {
-    if(argc != 4) {
+    if(argc != 5) {
         fprintf(stderr, "Wrong number of arguments\n");
-        fprintf(stderr, "Write <path> <expancion> <ip>\n");
+        fprintf(stderr, "Write:\n %s <path> <expancion> <ip> <port>", argv[0]);
         exit(EXIT_FAILURE);
     }
     
@@ -23,10 +23,12 @@ int main(int argc, char* argv[]) {
         close(sock);
         exit(EXIT_FAILURE);
     }
+
+    int port = atoi(argv[4]);
     
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT);
+    addr.sin_port = htons(port);
     addr.sin_addr.s_addr = inet_addr(argv[3]);
 
     if(connect(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
